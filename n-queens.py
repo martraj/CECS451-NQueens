@@ -6,7 +6,7 @@ Assignment 4: N-Queens Solver
 import sys
 import random
 
-def gen_rand_board(numQueens, numStates):
+def gen_rand_board(numQueens):
     board = []
     row = []
     for i in range(numQueens):
@@ -14,7 +14,21 @@ def gen_rand_board(numQueens, numStates):
             row.append('-')
         board.append(row)
         
+    
+    for i in range(numQueens):
+        for j in range(numQueens):
+            print(board[i][j], end=' ')
+        print('\n')
 
+
+    
+    #populate chessboard with queens NOT DONE YET 
+    #for i in range(numQueens):
+        #for j in (numQUeens):
+            #row[i] = 
+            
+def gen_encodings(numQueens, numStates):
+    
     encodings = [] #holds all encoding strings
     
     #generates k  unique encodings and stores them in encodings
@@ -31,19 +45,6 @@ def gen_rand_board(numQueens, numStates):
     
     print("encodings")
     print(encodings)
-    
-    for i in range(numQueens):
-        for j in range(numQueens):
-            print(board[i][j], end=' ')
-        print('\n')
-
-
-    
-    #populate chessboard with queens NOT DONE YET 
-    #for i in range(numQueens):
-        #for j in (numQUeens):
-            #row[i] = 
-            
         
         
 
@@ -67,8 +68,8 @@ def nqueens_solver(numQ, numS):
     # print(numQueens, numStates)
     numQueens = int(numQ)
     numStates = int(numS)
-    gen_rand_board(numQueens, numStates)
-
+    gen_rand_board(numQueens)
+    gen_encodings(numQueens, numStates)
 
 #----------MAIN----------
 nqueens_solver(sys.argv[1], sys.argv[2])
