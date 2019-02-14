@@ -31,7 +31,7 @@ def gen_encodings(numQueens, numStates):
     
     encodings = [] #holds all encoding strings
     
-    #generates k  unique encodings and stores them in encodings
+    #generates k  unique encodings and stores them in the encodings list
     for k in  range(numStates): 
         
         generated_encoding_list = random.sample(range(numQueens), numQueens) #generates a list of n unique nums
@@ -43,10 +43,22 @@ def gen_encodings(numQueens, numStates):
         
         encodings.append(encoding_string)
     
-    print("encodings")
-    print(encodings)
+    
+    return encodings
+
+def gen_probabilities(fitnesses):
+    
+    probabilities = []
+    denominator = 0
+    
+    for j in fitnesses: 
+        denominator += j
+    
+    for i in fitnesses:
+        percent = i / denominator 
+        probabilities.append(percent)
         
-        
+    return probabilities
 
     
 def local_search():
@@ -69,7 +81,12 @@ def nqueens_solver(numQ, numS):
     numQueens = int(numQ)
     numStates = int(numS)
     gen_rand_board(numQueens)
-    gen_encodings(numQueens, numStates)
+    encodings = gen_encodings(numQueens, numStates)
+    print("encodings")
+    print(encodings)
+    fitnesses = [24, 23, 20, 11]
+    print(gen_probabilities(fitnesses))
+    
 
 #----------MAIN----------
 nqueens_solver(sys.argv[1], sys.argv[2])
