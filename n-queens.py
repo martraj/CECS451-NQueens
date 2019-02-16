@@ -7,6 +7,32 @@ import sys
 import random
 import math
 
+class Encoding:
+    
+    def __init__(self, encoding):
+        self.encoding = encoding
+        self.fitness = 0
+        self.probability = 0
+        
+    def get_Fitness(self):
+        return self.fitness
+    
+    def get_Encoding(self):
+        return self.encoding
+    
+    def get_Probability(self):
+        return self.probability
+    
+    def set_Encoding(self, e):
+        self.encoding = e
+    
+    def set_Fitness(self, f):
+        self.fitness = f
+    
+    def set_Probability(self, p):
+        self.probability = p
+
+
 def gen_rand_board(numQueens):
     board = []
     row = []
@@ -30,7 +56,7 @@ def gen_rand_board(numQueens):
             
 def gen_encodings(numQueens, numStates):
     
-    encodings = [] #holds all encoding strings
+    encodings = [] #holds all Encoding objects
     
     #generates k  unique encodings and stores them in the encodings list
     for k in  range(numStates): 
@@ -40,33 +66,70 @@ def gen_encodings(numQueens, numStates):
     
         for i in generated_encoding_list:
             encoding_string += str(generated_encoding_list[i])
-
+            
         
-        encodings.append(encoding_string)
-    
+            
+        encodings.append(Encoding(encoding_string))
     
     return encodings
 
-def gen_probabilities(fitnesses):
-    
-    probabilities = []
+def gen_probabilities(encodings):
+    #calculating the probability of selection for each encoding using
+    #cost = encoding_i's fitness / summation of fitnesses
+
     denominator = 0
     
-    for j in fitnesses: 
-        denominator += j
+    for e in encodings: 
+        f = fitness_func(e.get_Encoding())
+        e.set_Fitness(f)
+        denominator += f
     
-    for i in fitnesses:
-        percent = i / denominator 
-        probabilities.append(percent)
+    for e in encodings:
+        prob = e.get_Fitness() / denominator 
+        e.set_Probability(prob)
+        #print(prob)
+       
+    #sort encodings by decreasing fitness
+    sorted_encodings = []
+    for i in range(len(encodings)): 
+        temp_encoding = max(encodings, key=lambda item: item.probability)  #gets the encoding w/ max prob
+        index = encodings.index(temp_encoding)   #gets the index of max 
+        del encodings[index] #deletes it from encodings
+        sorted_encodings.append(temp_encoding)
         
-    return probabilities
-
+    return sorted_encodings
+        
     
 def local_search():
     print('')
     
-def selection():
-    print('')
+def selection(numQueens, encodings):
+    #implementation of stochastic universal sampling
+    
+    next_gen = [] #encodings selected for next generation
+    num_pointers = math.ceil((numQueens*.75)) #selects .75*numQueens encodings for next population
+    point_distance = 1/num_pointers #distance separating each pointer
+    start_loc = random.uniform(0, point_distance) #get starting point of 1st pointer
+            
+    index = 0        
+    sum = encodings[index].get_Probability() 
+    
+    #locates which encoding each pointer is located in
+    for i in range(num_pointers): 
+        pointer = i*point_distance + start_loc # position of pointer
+        if pointer <= sum: #point is located in this encoding
+            next_gen.append(encodings[index])
+        else:   #need to locate the encoding the pointer is in
+            index+=1
+            for j in range(index, len(encodings)):
+                sum += encodings[j].get_Probability() 
+                if pointer <= sum:
+                    next_gen.append(encodings[j])
+                    break;
+            index = j    
+    return next_gen
+    
+
     
 def crossover():
     print('')
@@ -106,10 +169,21 @@ def nqueens_solver(numQ, numS):
     numStates = int(numS)
     gen_rand_board(numQueens)
     encodings = gen_encodings(numQueens, numStates)
-    print("encodings")
-    print(encodings)
-    fitnesses = [24, 23, 20, 11]
-    print(gen_probabilities(fitnesses))
+    encodings = gen_probabilities(encodings)
+    next_gen = selection(numQueens, encodings) #comment this line out when using the testing below
+    
+    '''
+    #for testing purposes
+    
+    print("probabilities for encodings:")
+    for e in encodings:
+        print(e.get_Probability())
+        
+    next_gen = selection(numQueens, encodings)
+    print("encodings chosen for next generation")
+    for e in next_gen:
+        print(e.get_Probability())
+    '''    
     
     
 #----------MAIN----------
