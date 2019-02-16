@@ -5,6 +5,7 @@ Assignment 4: N-Queens Solver
 
 import sys
 import random
+import math
 
 def gen_rand_board(numQueens):
     board = []
@@ -73,8 +74,33 @@ def crossover():
 def mutation():
     print('')
     
-def fitness_func():
-    print('')
+def ncr(a, b):
+    return math.factorial(a)/(math.factorial(b)*math.factorial(a-b))
+    
+def fitness_func(queenStr):
+    numQ = len(queenStr)
+    # calculate the total combinations - ncr numQ & 2
+    totalComb = ncr(numQ, 2)
+    numAttack = 0
+    
+    # find pairs of attacking queens in same row
+    for i in range(numQ):
+        for j in range(i+1, numQ):
+            if queenStr[i] == queenStr[j]:
+                numAttack += 1
+                
+    # find pairs of attacking queens in same diagonal
+    for i in range(numQ):
+        for j in range(i+1, numQ):
+            if abs(i-j) == abs(int(queenStr[i]) - int(queenStr[j])):
+                numAttack += 1
+        
+    # note - we don't need to count the number of pairs of attacking queens in
+    # the same column, because we will initialize the queens to be in separate
+    # columns for each state    
+    
+    # subtract and return
+    return totalComb - numAttack
     
 def nqueens_solver(numQ, numS):
     # print(numQueens, numStates)
@@ -87,6 +113,6 @@ def nqueens_solver(numQ, numS):
     fitnesses = [24, 23, 20, 11]
     print(gen_probabilities(fitnesses))
     
-
+    
 #----------MAIN----------
 nqueens_solver(sys.argv[1], sys.argv[2])
