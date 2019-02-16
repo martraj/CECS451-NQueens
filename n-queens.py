@@ -83,15 +83,13 @@ def fitness_func(queenStr):
     totalComb = ncr(numQ, 2)
     numAttack = 0
     
-    # find pairs of attacking queens in same row
     for i in range(numQ):
         for j in range(i+1, numQ):
+            # find pairs of attacking queens in same row
             if queenStr[i] == queenStr[j]:
                 numAttack += 1
                 
-    # find pairs of attacking queens in same diagonal
-    for i in range(numQ):
-        for j in range(i+1, numQ):
+            # find pairs of attacking queens in same diagonal
             if abs(i-j) == abs(int(queenStr[i]) - int(queenStr[j])):
                 numAttack += 1
         
