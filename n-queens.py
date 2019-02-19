@@ -100,8 +100,24 @@ def gen_probabilities(encodings):
     return sorted_encodings
         
     
-def local_search():
-    print('')
+def local_search(queenStr): # finds attacking queens
+    numQ = len(queenStr)
+    numAttack = 0
+    
+    for i in range(numQ):
+        for j in range(i+1, numQ):
+            # find pairs of attacking queens in same row
+            if queenStr[i] == queenStr[j]:
+                numAttack += 1
+                
+            # find pairs of attacking queens in same diagonal
+            if abs(i-j) == abs(int(queenStr[i]) - int(queenStr[j])):
+                numAttack += 1
+            
+            # do not need to count attacking columns because each index in the
+            # string is a column, they will never be in the same index/column
+                
+    return numAttack
     
 def selection(numQueens, encodings):
     #implementation of stochastic universal sampling
@@ -188,27 +204,10 @@ def ncr(a, b):
     return math.factorial(a)/(math.factorial(b)*math.factorial(a-b))
     
 def fitness_func(queenStr):
-    numQ = len(queenStr)
     # calculate the total combinations - ncr numQ & 2
-    totalComb = ncr(numQ, 2)
-    numAttack = 0
-    
-    for i in range(numQ):
-        for j in range(i+1, numQ):
-            # find pairs of attacking queens in same row
-            if queenStr[i] == queenStr[j]:
-                numAttack += 1
-                
-            # find pairs of attacking queens in same diagonal
-            if abs(i-j) == abs(int(queenStr[i]) - int(queenStr[j])):
-                numAttack += 1
-        
-    # note - we don't need to count the number of pairs of attacking queens in
-    # the same column, because we will initialize the queens to be in separate
-    # columns for each state    
-    
+    totalComb = ncr(len(queenStr), 2)    
     # subtract and return
-    return totalComb - numAttack
+    return totalComb - local_search(queenStr)
     
 def nqueens_solver(numQ, numS):
     # print(numQueens, numStates)
