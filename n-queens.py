@@ -131,9 +131,18 @@ def selection(numQueens, encodings):
     
 
     
-def crossover():
-    print('')
+def crossover(parent1, parent2):
+    # parent1 and parent2 is a list 
+    #choose random position to cross ( range 0 -parents DNA size)
+    cross_point = random.randint(0, len(parent1)-1)
     
+    #Make kid from crossing both parent. Slicing(start, stop) stop at stop - 1
+    kid1 = parent1[:cross_point] + parent2[cross_point:]
+    kid2 = parent2[:cross_point] + parent1[cross_point:]
+    
+    #return two of the kids DNA after cross
+    return kid1, kid2
+
 def mutation(queenStr):
     length = len(queenStr)
     
