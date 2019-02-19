@@ -48,11 +48,29 @@ def gen_rand_board(numQueens):
         print('\n')
 
 
+def display_results(numQueens, encoding):
+    #populate chessboard with queens
+    board = []
+    row = []
+    encoding_str = encoding.get_Encoding()
+
+    print('encoding string')
+    print(encoding_str)
     
-    #populate chessboard with queens NOT DONE YET 
-    #for i in range(numQueens):
-        #for j in (numQUeens):
-            #row[i] = 
+    for i in range(numQueens): #i = rows
+        queen_col = int(encoding_str[i])
+        for j in range(numQueens): #j = columns
+            if j == queen_col:
+                row.append('X')
+            else:
+                row.append('-')
+        board.append(row)
+        row =[]
+        
+    for i in range(numQueens):
+        for j in range(numQueens):
+            print(board[i][j], end=' ')
+        print('\n')
             
 def gen_encodings(numQueens, numStates):
     
@@ -89,6 +107,12 @@ def gen_probabilities(encodings):
         e.set_Probability(prob)
         #print(prob)
        
+    return sort_encodings(encodings)
+
+        
+
+  
+def sort_encodings(encodings):  
     #sort encodings by decreasing fitness
     sorted_encodings = []
     for i in range(len(encodings)): 
@@ -96,9 +120,8 @@ def gen_probabilities(encodings):
         index = encodings.index(temp_encoding)   #gets the index of max 
         del encodings[index] #deletes it from encodings
         sorted_encodings.append(temp_encoding)
-        
+    
     return sorted_encodings
-        
     
 def local_search(queenStr): # finds attacking queens
     numQ = len(queenStr)
@@ -200,6 +223,8 @@ def nqueens_solver(numQ, numS):
     encodings = gen_encodings(numQueens, numStates)
     encodings = gen_probabilities(encodings)
     next_gen = selection(numQueens, encodings) #comment this line out when using the testing below
+    display_results(numQueens, next_gen[0])
+    
     
     '''
     #for testing purposes
@@ -212,7 +237,7 @@ def nqueens_solver(numQ, numS):
     print("encodings chosen for next generation")
     for e in next_gen:
         print(e.get_Probability())
-    '''    
+    '''   
     
     
 #----------MAIN----------
