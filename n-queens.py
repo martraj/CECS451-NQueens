@@ -182,20 +182,20 @@ def crossover(next_gen, numStates):
         kid1 = parent1[:cross_point] + parent2[cross_point:]
         kid2 = parent2[:cross_point] + parent1[cross_point:]
         
-        crossover_gen.append(kid1)
-        crossover_gen.append(kid2)
+        crossover_gen.append(Encoding(kid1))
+        crossover_gen.append(Encoding(kid2))
     
     return crossover_gen
 
 def mutation(encodings):
     mut_gen = []
     for e in encodings: 
-        length = len(e.get_Encoding)
+        length = len(e.get_Encoding())
         randIdx = random.randrange(length + 1) # generates random index to mutate
         
-        if randIdx < length + 1: # if it generates index length + 1 then make no mutations
+        if randIdx < length: # if it generates index length + 1 then make no mutations
              randVal = random.randrange(1, length) # random value to change to
-             newStr = list(e.get_Encoding)
+             newStr = list(e.get_Encoding())
              newStr[randIdx] = str(randVal)
              e.set_Encoding("".join(newStr))
              
@@ -214,14 +214,18 @@ def fitness_func(queenStr):
 def nqueens_solver(numQ, numS):
     '''
     # print(numQueens, numStates)
-    numQueens = int(numQ)
-    numStates = int(numS)
+
     gen_rand_board(numQueens)
     encodings = gen_encodings(numQueens, numStates)
     encodings = gen_probabilities(encodings)
     next_gen = selection(numQueens, encodings) #comment this line out when using the testing below
     display_results(numQueens, next_gen[0])
+    
+    
+    
     '''
+    numQ = int(numQ)
+    numS = int(numS)
     goal = ncr(numQ, 2)
     encodings = gen_encodings(numQ, numS)
     answer = recursive(encodings, goal, numQ, numS)
