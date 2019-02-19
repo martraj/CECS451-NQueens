@@ -134,8 +134,18 @@ def selection(numQueens, encodings):
 def crossover():
     print('')
     
-def mutation():
-    print('')
+def mutation(queenStr):
+    length = len(queenStr)
+    
+    randIdx = random.randrange(length + 1) # generates random index to mutate
+    
+    if randIdx < length + 1: # if it generates index length + 1 then make no mutations
+         randVal = random.randrange(1, length) # random value to change to
+         newStr = list(queenStr)
+         newStr[randIdx] = str(randVal)
+         queenStr = "".join(newStr)
+    
+    return queenStr # return the mutated string
     
 def ncr(a, b):
     return math.factorial(a)/(math.factorial(b)*math.factorial(a-b))
