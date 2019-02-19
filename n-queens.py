@@ -155,8 +155,8 @@ def crossover(next_gen, encoding):
     if (encoding_size % 2 == 0):
         for i in range(encoding_size):
             # parent1 and parent2 is a list from next_gen selection list (selection population)
-            parent1 = random.choice(next_gen)
-            parent2 = random.choice(next_gen)
+            parent1 = random.choice(next_gen).get_Encoding()
+            parent2 = random.choice(next_gen).get_Encoding()
             
             #choose random position to cross ( range 0 -parents DNA size)
             cross_point = random.randint(0, len(parent1)-1)
