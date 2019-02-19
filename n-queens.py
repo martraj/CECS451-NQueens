@@ -172,8 +172,7 @@ def selection(numQueens, encodings):
     
 def crossover(next_gen, encoding, numStates):
     crossover_gen = []
-    
-  
+ 
     for i in range(numStates):
         # parent1 and parent2 is a list from next_gen selection list (selection population)
         parent1 = random.choice(next_gen)
@@ -188,8 +187,6 @@ def crossover(next_gen, encoding, numStates):
         
         crossover_gen.append(kid1)
         crossover_gen.append(kid2)
-    #Add the last UNPAIRED random parent to the list (odd number)
-    crossover_gen.append(random.choice(next_gen))
     
     return crossover_gen
 
