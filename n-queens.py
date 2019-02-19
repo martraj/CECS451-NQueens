@@ -109,9 +109,6 @@ def gen_probabilities(encodings):
        
     return sort_encodings(encodings)
 
-        
-
-  
 def sort_encodings(encodings):  
     #sort encodings by decreasing fitness
     sorted_encodings = []
@@ -170,13 +167,13 @@ def selection(numQueens, encodings):
     
 
     
-def crossover(next_gen, encoding, numStates):
+def crossover(next_gen, numStates):
     crossover_gen = []
  
     for i in range(numStates):
         # parent1 and parent2 is a list from next_gen selection list (selection population)
-        parent1 = random.choice(next_gen)
-        parent2 = random.choice(next_gen)
+        parent1 = random.choice(next_gen).get_Encoding()
+        parent2 = random.choice(next_gen).get_Encoding()
         
         #choose random position to cross ( range 0 -parents DNA size)
         cross_point = random.randint(0, len(parent1)-1)
@@ -190,18 +187,20 @@ def crossover(next_gen, encoding, numStates):
     
     return crossover_gen
 
-def mutation(queenStr):
-    length = len(queenStr)
-    
-    randIdx = random.randrange(length + 1) # generates random index to mutate
-    
-    if randIdx < length + 1: # if it generates index length + 1 then make no mutations
-         randVal = random.randrange(1, length) # random value to change to
-         newStr = list(queenStr)
-         newStr[randIdx] = str(randVal)
-         queenStr = "".join(newStr)
-    
-    return queenStr # return the mutated string
+def mutation(encodings):
+    mut_gen = []
+    for e in encodings: 
+        length = len(e.get_Encoding)
+        randIdx = random.randrange(length + 1) # generates random index to mutate
+        
+        if randIdx < length + 1: # if it generates index length + 1 then make no mutations
+             randVal = random.randrange(1, length) # random value to change to
+             newStr = list(e.get_Encoding)
+             newStr[randIdx] = str(randVal)
+             e.set_Encoding("".join(newStr))
+             
+        mut_gen.append(e)
+    return mut_gen # return the mutated string
     
 def ncr(a, b):
     return math.factorial(a)/(math.factorial(b)*math.factorial(a-b))
@@ -213,6 +212,7 @@ def fitness_func(queenStr):
     return totalComb - local_search(queenStr)
     
 def nqueens_solver(numQ, numS):
+    '''
     # print(numQueens, numStates)
     numQueens = int(numQ)
     numStates = int(numS)
@@ -221,6 +221,25 @@ def nqueens_solver(numQ, numS):
     encodings = gen_probabilities(encodings)
     next_gen = selection(numQueens, encodings) #comment this line out when using the testing below
     display_results(numQueens, next_gen[0])
+    '''
+    goal = ncr(numQ, 2)
+    encodings = gen_encodings(numQ, numS)
+    answer = recursive(encodings, goal, numQ, numS)
+    display_results(numQ, answer)
+
+def recursive(encodings, goal, numQ, numS):
+    
+    encodings = gen_probabilities(encodings)
+    for e in encodings:
+        if e.get_Fitness() == goal:
+            return e
+        else: 
+            next_gen = selection(numQ, encodings)
+            crossover_gen = crossover(next_gen, numS)
+            mut_gen = mutation(crossover_gen)
+            recursive(mut_gen, goal, numQ, numS)
+            
+    
     
     
     '''
