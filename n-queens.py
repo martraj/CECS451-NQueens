@@ -131,17 +131,45 @@ def selection(numQueens, encodings):
     
 
     
-def crossover(parent1, parent2):
-    # parent1 and parent2 is a list 
-    #choose random position to cross ( range 0 -parents DNA size)
-    cross_point = random.randint(0, len(parent1)-1)
+def crossover(next_gen, encoding):
+    encoding_size = len(encoding)
+    crossover_gen = []
     
-    #Make kid from crossing both parent. Slicing(start, stop) stop at stop - 1
-    kid1 = parent1[:cross_point] + parent2[cross_point:]
-    kid2 = parent2[:cross_point] + parent1[cross_point:]
+    #size of encing is even
+    if (encoding_size % 2 == 0):
+        for i in range(encoding_size):
+            # parent1 and parent2 is a list from next_gen selection list (selection population)
+            parent1 = random.choice(next_gen)
+            parent2 = random.choice(next_gen)
+            
+            #choose random position to cross ( range 0 -parents DNA size)
+            cross_point = random.randint(0, len(parent1)-1)
     
-    #return two of the kids DNA after cross
-    return kid1, kid2
+            #Slicing(start, stop) stop at stop - 1
+            kid1 = parent1[:cross_point] + parent2[cross_point:]
+            kid2 = parent2[:cross_point] + parent1[cross_point:]
+            
+            crossover_gen.append(kid1)
+            crossover_gen.append(kid2)
+    else:
+        for i in range(encoding_size - 1):
+            # parent1 and parent2 is a list from next_gen selection list (selection population)
+            parent1 = random.choice(next_gen)
+            parent2 = random.choice(next_gen)
+            
+            #choose random position to cross ( range 0 -parents DNA size)
+            cross_point = random.randint(0, len(parent1)-1)
+    
+            #Slicing(start, stop) stop at stop - 1
+            kid1 = parent1[:cross_point] + parent2[cross_point:]
+            kid2 = parent2[:cross_point] + parent1[cross_point:]
+            
+            crossover_gen.append(kid1)
+            crossover_gen.append(kid2)
+        #Add the last UNPAIRED random parent to the list (odd number)
+        crossover_gen.append(random.choice(next_gen))
+        
+    return crossover_gen
 
 def mutation(queenStr):
     length = len(queenStr)
