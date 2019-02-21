@@ -231,10 +231,27 @@ def nqueens_solver(numQ, numS):
     step = 0
     
     encodings = gen_encodings(numQ, numS)
+    goal = ncr(numQ, 2)
+    encoding_answer = Encoding("")
+    not_found = True; 
     
+    while (not_found):
+        encodings = gen_probabilities(encodings)
+        for e in encodings:
+            if e.get_Fitness() == goal:
+                encoding_answer = e
+                not_found = False
+                break;
+             
+        next_gen = selection(numQ, encodings)
+        crossover_gen = crossover(next_gen, numS)
+        mut_gen = mutation(crossover_gen) 
+        step += 1
+        print("Step ", step)
+        encodings = mut_gen
     
-    answer = recursive(encodings, step, numQ, numS)
-    display_results(numQ, answer)
+    #answer = recursive(encodings, step, numQ, numS)
+    display_results(numQ, encoding_answer)
     '''
     found = False
     while not found:
@@ -281,6 +298,6 @@ def recursive(encodings, step, numQ, numS):
         print(e.get_Probability())
     '''   
 
-nqueens_solver(4, 2)   
+#nqueens_solver(4, 2)   
 #----------MAIN----------
-#nqueens_solver(sys.argv[1], sys.argv[2])
+nqueens_solver(sys.argv[1], sys.argv[2])
