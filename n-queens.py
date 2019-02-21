@@ -95,7 +95,7 @@ def gen_probabilities(encodings):
     #calculating the probability of selection for each encoding using
     #cost = encoding_i's fitness / summation of fitnesses
 
-    denominator = 0
+    denominator = 0.0001
     
     for e in encodings: 
         f = fitness_func(e.get_Encoding())
@@ -148,18 +148,18 @@ def selection(numQueens, encodings):
     start_loc = random.uniform(0, point_distance) #get starting point of 1st pointer
             
     index = 0        
-    sum = encodings[index].get_Probability() 
+    sum_sel = encodings[index].get_Probability() 
     
     #locates which encoding each pointer is located in
     for i in range(num_pointers): 
         pointer = i*point_distance + start_loc # position of pointer
-        if pointer <= sum: #point is located in this encoding
+        if pointer <= sum_sel: #point is located in this encoding
             next_gen.append(encodings[index])
         else:   #need to locate the encoding the pointer is in
             index+=1
             for j in range(index, len(encodings)):
-                sum += encodings[j].get_Probability() 
-                if pointer <= sum:
+                sum_sel += encodings[j].get_Probability() 
+                if pointer <= sum_sel:
                     next_gen.append(encodings[j])
                     break;
             index = j    
@@ -227,26 +227,48 @@ def nqueens_solver(numQ, numS):
     numQ = int(numQ)
     numS = int(numS)
     goal = ncr(numQ, 2)
-    encodings = gen_encodings(numQ, numS)
-    answer = recursive(encodings, goal, numQ, numS)
-    display_results(numQ, answer)
-
-def recursive(encodings, goal, numQ, numS):
     
-    encodings = gen_probabilities(encodings)
-    for e in encodings:
-        if e.get_Fitness() == goal:
-            return e
-        else: 
-            next_gen = selection(numQ, encodings)
+    step = 0
+    
+    encodings = gen_encodings(numQ, numS)
+    
+    
+    answer = recursive(encodings, step, numQ, numS)
+    display_results(numQ, answer)
+    '''
+    found = False
+    while not found:
+        sort = gen_probabilities(encodings)
+        if sort[0].get_Fitness() == goal:
+            return encodings[0]
+        else:
+            next_gen = selection(numQ, sort)
             crossover_gen = crossover(next_gen, numS)
             mut_gen = mutation(crossover_gen)
-            recursive(mut_gen, goal, numQ, numS)
+            step += 1
+            print("Step ", step)
+            encodings = mut_gen
+    '''
+
+
+def recursive(encodings, step, numQ, numS):
+    
+    encodings = gen_probabilities(encodings)
+    goal = ncr(numQ, 2)
+
+    if encodings[0].get_Fitness() == goal:
+        return encodings[0]
+    else: 
+        next_gen = selection(numQ, encodings)
+        crossover_gen = crossover(next_gen, numS)
+        mut_gen = mutation(crossover_gen)
+        step += 1
+        print("Step ", step)
+        return recursive(mut_gen, step, numQ, numS)
             
     
-    
-    
     '''
+    
     #for testing purposes
     
     print("probabilities for encodings:")
@@ -258,7 +280,7 @@ def recursive(encodings, goal, numQ, numS):
     for e in next_gen:
         print(e.get_Probability())
     '''   
-    
-    
+
+nqueens_solver(4, 2)   
 #----------MAIN----------
-nqueens_solver(sys.argv[1], sys.argv[2])
+#nqueens_solver(sys.argv[1], sys.argv[2])
