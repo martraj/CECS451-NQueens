@@ -170,7 +170,8 @@ def selection(numQueens, encodings):
 def crossover(next_gen, numStates):
     crossover_gen = []
  
-    for i in range(numStates):
+    
+    while(len(crossover_gen) < numStates):
         # parent1 and parent2 is a list from next_gen selection list (selection population)
         parent1 = random.choice(next_gen).get_Encoding()
         parent2 = random.choice(next_gen).get_Encoding()
@@ -182,8 +183,13 @@ def crossover(next_gen, numStates):
         kid1 = parent1[:cross_point] + parent2[cross_point:]
         kid2 = parent2[:cross_point] + parent1[cross_point:]
         
-        crossover_gen.append(Encoding(kid1))
-        crossover_gen.append(Encoding(kid2))
+        if (len(crossover_gen) + 1 == numStates):
+            crossover_gen.append(Encoding(kid1))
+            
+        else: 
+            crossover_gen.append(Encoding(kid1))
+            crossover_gen.append(Encoding(kid2))
+            
     
     return crossover_gen
 
@@ -233,25 +239,47 @@ def nqueens_solver(numQ, numS):
     encodings = gen_encodings(numQ, numS)
     goal = ncr(numQ, 2)
     encoding_answer = Encoding("")
-    not_found = True; 
     
+    not_found = True; 
+    print("current encodings")
+    for e in encodings: 
+        print (e.get_Encoding())
+    i =0
     while (not_found):
         encodings = gen_probabilities(encodings)
         for e in encodings:
             if e.get_Fitness() == goal:
                 encoding_answer = e
-                not_found = False
+                #not_found = False
                 break;
              
         next_gen = selection(numQ, encodings)
+        
+        '''
+        print("fittest parent encodings")
+        for e in next_gen: 
+            print (e.get_Encoding())
+        
+         '''   
         crossover_gen = crossover(next_gen, numS)
+        '''
+        print("crossover encodings")
+        for e in crossover_gen: 
+            print (e.get_Encoding())
+        '''
         mut_gen = mutation(crossover_gen) 
+        '''
+        print("mutated parent encodings")
+        for e in mut_gen: 
+            print (e.get_Encoding())
+         '''
         step += 1
         print("Step ", step)
         encodings = mut_gen
+        i+=1
     
-    #answer = recursive(encodings, step, numQ, numS)
-    display_results(numQ, encoding_answer)
+    #encoding_answer = recursive(encodings, step, numQ, numS)
+    #display_results(numQ, encoding_answer)
     '''
     found = False
     while not found:
@@ -272,7 +300,20 @@ def recursive(encodings, step, numQ, numS):
     
     encodings = gen_probabilities(encodings)
     goal = ncr(numQ, 2)
+    
+    encodings = gen_probabilities(encodings)
+    for e in encodings:
+        if e.get_Fitness() == goal:
+            return e
+        
+    next_gen = selection(numQ, encodings)
+    crossover_gen = crossover(next_gen, numS)
+    mut_gen = mutation(crossover_gen) 
+    step += 1
+    print("Step ", step)
+    return recursive(mut_gen, step, numQ, numS)
 
+'''
     if encodings[0].get_Fitness() == goal:
         return encodings[0]
     else: 
@@ -283,8 +324,7 @@ def recursive(encodings, step, numQ, numS):
         print("Step ", step)
         return recursive(mut_gen, step, numQ, numS)
             
-    
-    '''
+
     
     #for testing purposes
     
