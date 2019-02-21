@@ -143,26 +143,47 @@ def selection(numQueens, encodings):
     #implementation of stochastic universal sampling
     
     next_gen = [] #encodings selected for next generation
-    num_pointers = math.ceil((numQueens*.75)) #selects .75*numQueens encodings for next population
-    point_distance = 1/num_pointers #distance separating each pointer
+    num_pointers = math.floor((numQueens*.75)) #selects .75*numQueens encodings for next population
+    #print("number of pointers")
+    #print(num_pointers)
+    point_distance = 1/num_pointers #distance separating each psointer
+    #print("distance between pointers")
+    #print(point_distance)
     start_loc = random.uniform(0, point_distance) #get starting point of 1st pointer
-            
+    #print("start location")
+    #print(start_loc)        
     index = 0        
     sum_sel = encodings[index].get_Probability() 
+    #print("starting sum first prob")
+    #print(sum_sel)
     
     #locates which encoding each pointer is located in
     for i in range(num_pointers): 
         pointer = i*point_distance + start_loc # position of pointer
+        #print("pointer " + str(i) + "i s at pos: " + str(pointer))
         if pointer <= sum_sel: #point is located in this encoding
             next_gen.append(encodings[index])
+            #print("encoding used")
+            #print(encodings[index].get_Encoding())
         else:   #need to locate the encoding the pointer is in
             index+=1
             for j in range(index, len(encodings)):
                 sum_sel += encodings[j].get_Probability() 
+                #print("current position of sum")
+                #print (sum_sel)
                 if pointer <= sum_sel:
+                    #print("encoding selected ")
+                    #print(encodings[j].get_Encoding())
                     next_gen.append(encodings[j])
                     break;
-            index = j    
+            index = j  
+    '''
+    print("selected encodings")
+    for e in next_gen:
+        print(e.get_Encoding())
+    '''
+    if sum_sel == 0: 
+        return encodings
     return next_gen
     
 
@@ -247,20 +268,23 @@ def nqueens_solver(numQ, numS):
     i =0
     while (not_found):
         encodings = gen_probabilities(encodings)
+        
         for e in encodings:
-            if e.get_Fitness() == goal:
+            
+            #print("fitness for encoding " + str(e.get_Encoding()) + "is " + str(e.get_Fitness()))
+            if (e.get_Fitness() == goal):
                 encoding_answer = e
-                #not_found = False
-                break;
+                not_found = False
+                break
              
         next_gen = selection(numQ, encodings)
-        
         '''
+        
         print("fittest parent encodings")
         for e in next_gen: 
             print (e.get_Encoding())
-        
-         '''   
+        '''
+           
         crossover_gen = crossover(next_gen, numS)
         '''
         print("crossover encodings")
@@ -275,11 +299,12 @@ def nqueens_solver(numQ, numS):
          '''
         step += 1
         print("Step ", step)
+        print()
         encodings = mut_gen
         i+=1
     
     #encoding_answer = recursive(encodings, step, numQ, numS)
-    #display_results(numQ, encoding_answer)
+    display_results(numQ, encoding_answer)
     '''
     found = False
     while not found:
