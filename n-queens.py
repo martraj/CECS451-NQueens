@@ -335,9 +335,9 @@ def histogram(k, steps):
 
     fig = plt.figure()
     plt.hist(steps, bins, histtype='bar', rwidth=0.8)
-
-    plt.xlabel('Steps')
-    plt.ylabel('Iterations')
+    
+    plt.xlabel('# of Steps (x)')
+    plt.ylabel('# of Iterations Performing x Steps')
     plt.title('Genetic Algorithm for k=' + str(k))
     plt.legend()
     plt.show()
@@ -345,9 +345,9 @@ def histogram(k, steps):
 
    
         
-nqueens_solver(8, 4)
+#nqueens_solver(8, 4)
 
 #main_function(4,2)
 #nqueens_solver(5, 10)   
 #----------MAIN----------
-#nqueens_solver(sys.argv[1], sys.argv[2])
+nqueens_solver(sys.argv[1], sys.argv[2])
