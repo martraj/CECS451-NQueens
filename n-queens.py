@@ -6,6 +6,7 @@ Assignment 4: N-Queens Solver
 import sys
 import random
 import math
+import matplotlib.pyplot as plt
 
 class Encoding:
     
@@ -286,6 +287,7 @@ def nqueens_solver(numQ, numS):
     numQ = int(numQ)
     numS = int(numS)
     goal = ncr(numQ, 2)
+    steps = []
     
     step = 0
     
@@ -298,7 +300,7 @@ def nqueens_solver(numQ, numS):
     for e in encodings: 
         print (e.get_Encoding())
     i = 0
-    while i < 10000:
+    while i<100:
         encodings = gen_probabilities(encodings)
         '''
         print("Goal: ", goal)
@@ -346,6 +348,9 @@ def nqueens_solver(numQ, numS):
         display_results(numQ, encoding_answer)
     else:
         print("No solution found.")
+    
+    histogram(numS, steps)
+    
     '''
     found = False
     while not found:
@@ -360,6 +365,20 @@ def nqueens_solver(numQ, numS):
             print("Step ", step)
             encodings = mut_gen
     '''
+def histogram(k, steps):
+
+
+    bins = [0,1,2,3,4,5,6,7,8,9,10,11,12,13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+
+    fig = plt.figure()
+    plt.hist(steps, bins, histtype='bar', rwidth=0.8)
+
+    plt.xlabel('Steps')
+    plt.ylabel('Iterations')
+    plt.title('Genetic Algorith for k=' + str(k))
+    plt.legend()
+    plt.show()
+    fig.savefig('histogram.png')
 
 
 def recursive(encodings, step, numQ, numS):
