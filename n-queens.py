@@ -196,7 +196,7 @@ def crossover(next_gen, numStates):
         # parent1 and parent2 is a list from next_gen selection list (selection population)
         parent1 = random.choice(next_gen).get_Encoding()
         parent2 = random.choice(next_gen).get_Encoding()
-        
+        #print("Crossing {} & {}".format(parent1, parent2))
         #choose random position to cross ( range 0 -parents DNA size)
         cross_point = random.randint(0, len(parent1)-1)
 
@@ -221,13 +221,25 @@ def mutation(encodings):
         rand1 = random.randrange(length)
         rand2 = random.randrange(length)
         
-        print("swap at idx {} & idx {}".format(rand1, rand2))
+        #print("swap at idx {} & idx {}".format(rand1, rand2))
         
         newStr = list(e.get_Encoding())
         temp = newStr[rand1]
         newStr[rand1] = newStr[rand2]
         newStr[rand2] = temp
-        e.set_Encoding("".join(newStr))
+        
+        uniqueStr = []
+        
+        for i in range(len(newStr)):
+            if newStr[i] not in uniqueStr:
+                uniqueStr.append(newStr[i])
+            else:
+                r = random.randrange(length)
+                while(str(r) in uniqueStr):
+                    r = random.randrange(length)
+                uniqueStr.append(str(r))
+                
+        e.set_Encoding("".join(uniqueStr))
         
         mut_gen.append(e)
         
@@ -286,37 +298,43 @@ def nqueens_solver(numQ, numS):
     for e in encodings: 
         print (e.get_Encoding())
     i = 0
-    while (not_found):
+    while i < 10000:
         encodings = gen_probabilities(encodings)
-        
+        '''
+        print("Goal: ", goal)
         for e in encodings:
-            
+            print("{} Fitness: {}".format(e.get_Encoding(), e.get_Fitness()))
+        ''' 
             #print("fitness for encoding " + str(e.get_Encoding()) + "is " + str(e.get_Fitness()))
-            if (e.get_Fitness() == goal):
-                encoding_answer = e
-                not_found = False
-                break
+        if (encodings[0].get_Fitness() == goal):
+            encoding_answer = encodings[0]
+            not_found = False
+            break
              
         next_gen = selection(numQ, encodings)
         
-        
+        '''
         print("fittest parent encodings")
         for e in next_gen: 
             print (e.get_Encoding())
-        
+        '''
            
         crossover_gen = crossover(next_gen, numS)
         
+        '''
         print("crossover encodings")
         for e in crossover_gen: 
             print (e.get_Encoding())
+        '''
         
         mut_gen = mutation(crossover_gen) 
         
+        '''
         print("mutated parent encodings")
         for e in mut_gen: 
             print (e.get_Encoding())
-         
+        '''
+        
         step += 1
         print("Step ", step)
         print()
@@ -324,7 +342,10 @@ def nqueens_solver(numQ, numS):
         i+=1
     
     #encoding_answer = recursive(encodings, step, numQ, numS)
-    #display_results(numQ, encoding_answer)
+    if encoding_answer.get_Encoding() is not "":
+        display_results(numQ, encoding_answer)
+    else:
+        print("No solution found.")
     '''
     found = False
     while not found:
@@ -432,6 +453,6 @@ def main_fuction(numQ, numS):
     display_results(numQ, encoding_answer)
 '''        
 #main_function(4,2)
-#nqueens_solver(4, 2)   
+#nqueens_solver(5, 10)   
 #----------MAIN----------
 nqueens_solver(sys.argv[1], sys.argv[2])
