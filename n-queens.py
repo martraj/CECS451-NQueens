@@ -2,14 +2,14 @@
 CECS 451: Artificial Intelligence
 Assignment 4: N-Queens Solver
 '''
-
 import sys
 import random
 import math
 import matplotlib.pyplot as plt
+import statistics
 
 class Encoding:
-    
+ 
     def __init__(self, encoding):
         self.encoding = encoding
         self.fitness = 0
@@ -42,12 +42,10 @@ def gen_rand_board(numQueens):
             row.append('-')
         board.append(row)
         
-    
     for i in range(numQueens):
         for j in range(numQueens):
             print(board[i][j], end=' ')
         print('\n')
-
 
 def display_results(numQueens, encoding):
     #populate chessboard with queens
@@ -74,20 +72,14 @@ def display_results(numQueens, encoding):
         print('\n')
             
 def gen_encodings(numQueens, numStates):
-    
     encodings = [] #holds all Encoding objects
     
     #generates k  unique encodings and stores them in the encodings list
     for k in  range(numStates): 
-        
         generated_encoding_list = random.sample(range(numQueens), numQueens) #generates a list of n unique nums
         encoding_string = ""
-    
         for i in generated_encoding_list:
             encoding_string += str(generated_encoding_list[i])
-            
-        
-            
         encodings.append(Encoding(encoding_string))
     
     return encodings
@@ -95,7 +87,6 @@ def gen_encodings(numQueens, numStates):
 def gen_probabilities(encodings):
     #calculating the probability of selection for each encoding using
     #cost = encoding_i's fitness / summation of fitnesses
-
     denominator = 0.0001
     
     for e in encodings: 
@@ -130,11 +121,9 @@ def local_search(queenStr): # finds attacking queens
             # find pairs of attacking queens in same row
             if queenStr[i] == queenStr[j]:
                 numAttack += 1
-                
             # find pairs of attacking queens in same diagonal
             if abs(i-j) == abs(int(queenStr[i]) - int(queenStr[j])):
                 numAttack += 1
-            
             # do not need to count attacking columns because each index in the
             # string is a column, they will never be in the same index/column
                 
@@ -191,7 +180,6 @@ def selection(numQueens, encodings):
     
 def crossover(next_gen, numStates):
     crossover_gen = []
- 
     
     while(len(crossover_gen) < numStates):
         # parent1 and parent2 is a list from next_gen selection list (selection population)
@@ -200,19 +188,16 @@ def crossover(next_gen, numStates):
         #print("Crossing {} & {}".format(parent1, parent2))
         #choose random position to cross ( range 0 -parents DNA size)
         cross_point = random.randint(0, len(parent1)-1)
-
         #Slicing(start, stop) stop at stop - 1
         kid1 = parent1[:cross_point] + parent2[cross_point:]
         kid2 = parent2[:cross_point] + parent1[cross_point:]
         
         if (len(crossover_gen) + 1 == numStates):
-            crossover_gen.append(Encoding(kid1))
-            
+            crossover_gen.append(Encoding(kid1)    
         else: 
             crossover_gen.append(Encoding(kid1))
-            crossover_gen.append(Encoding(kid2))
-            
-    
+            crossover_gen.append(Encoding(kid2)) 
+                                 
     return crossover_gen
 
 def mutation(encodings):
@@ -222,13 +207,11 @@ def mutation(encodings):
         rand1 = random.randrange(length)
         rand2 = random.randrange(length)
         
-        #print("swap at idx {} & idx {}".format(rand1, rand2))
-        
+        #print("swap at idx {} & idx {}".format(rand1, rand2)
         newStr = list(e.get_Encoding())
         temp = newStr[rand1]
         newStr[rand1] = newStr[rand2]
         newStr[rand2] = temp
-        
         uniqueStr = []
         
         for i in range(len(newStr)):
@@ -239,9 +222,8 @@ def mutation(encodings):
                 while(str(r) in uniqueStr):
                     r = random.randrange(length)
                 uniqueStr.append(str(r))
-                
+          
         e.set_Encoding("".join(uniqueStr))
-        
         mut_gen.append(e)
         
     return mut_gen # return the mutated string
@@ -260,9 +242,8 @@ def calculate_stats(steps):
     sorted_steps = sorted(steps)
     sum_steps = sum(steps)
     len_steps = len(steps)
-    
     average = sum_steps/len_steps
-    median = (len_steps/ 2 ) + 0.5
+    median = statistics.median(steps)
     minimum = min(steps)
     maximum = max(steps)
     
@@ -280,25 +261,22 @@ def nqueens_solver(numQ, numS):
     encodings = gen_probabilities(encodings)
     next_gen = selection(numQueens, encodings) #comment this line out when using the testing below
     display_results(numQueens, next_gen[0])
-    
-    
-    
     '''
     numQ = int(numQ)
     numS = int(numS)
     goal = ncr(numQ, 2)
     steps = []
-    
     step = 0
     
     encodings = gen_encodings(numQ, numS)
     goal = ncr(numQ, 2)
     encoding_answer = Encoding("")
-    
     not_found = True; 
-    print("current encodings")
+                                 
+    print("current encodings")                       
     for e in encodings: 
         print (e.get_Encoding())
+                                 
     i = 0
     while i<100:
         encodings = gen_probabilities(encodings)
@@ -312,7 +290,6 @@ def nqueens_solver(numQ, numS):
             encoding_answer = encodings[0]
             not_found = False
             break
-             
         next_gen = selection(numQ, encodings)
         
         '''
@@ -366,13 +343,10 @@ def nqueens_solver(numQ, numS):
             encodings = mut_gen
     '''
 def histogram(k, steps):
-
-
     bins = [0,1,2,3,4,5,6,7,8,9,10,11,12,13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-
     fig = plt.figure()
+                              
     plt.hist(steps, bins, histtype='bar', rwidth=0.8)
-
     plt.xlabel('Steps')
     plt.ylabel('Iterations')
     plt.title('Genetic Algorith for k=' + str(k))
