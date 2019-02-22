@@ -362,7 +362,56 @@ def recursive(encodings, step, numQ, numS):
     for e in next_gen:
         print(e.get_Probability())
     '''   
-
+'''--------------------------------main_function is sort of same of solver function------------------------------''
+def main_fuction(numQ, numS):
+    numQ = int(numQ)
+    numS = int(numS)
+    goal = ncr(numQ, 2)
+    step = 0
+    encoding_answer = Encoding("") 
+    population = gen_encodings(numQ, numS)
+    
+    print("current encodings")
+    for item in population: 
+        print (item.get_Encoding())
+    
+    i = 4
+    not_found = True
+    while (not_found):
+        print("Step ", step)
+        for item in population:
+            #Check if individual item in the population meet the fitness goal
+            if (item.get_Fitness() == goal):
+                encoding_answer = item
+                #not_found = False
+                i = 0
+                break
+        
+        #
+        next_gen = selection(numQ, population)
+        '''print("Seleted: ")
+        for e in next_gen: 
+            print (e.get_Encoding())
+        '''#
+        crossover_gen = crossover(next_gen, numS)
+        '''print("Crossover: ")
+        for e in crossover_gen: 
+            print (e.get_Encoding())
+        '''#
+        mut_gen = mutation(crossover_gen) 
+        '''print("Mutation")
+        for e in mut_gen: 
+            print (e.get_Encoding())
+        '''
+        step = step + 1
+        print()
+        population = mut_gen
+        i = i - 1
+    
+    #encoding_answer = recursive(encodings, step, numQ, numS)    I don't think we need this here
+    display_results(numQ, encoding_answer)
+        
+#main_function(4,2)
 #nqueens_solver(4, 2)   
 #----------MAIN----------
 nqueens_solver(sys.argv[1], sys.argv[2])
