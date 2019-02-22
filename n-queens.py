@@ -216,17 +216,21 @@ def crossover(next_gen, numStates):
 
 def mutation(encodings):
     mut_gen = []
-    for e in encodings: 
+    for e in encodings:
         length = len(e.get_Encoding())
-        randIdx = random.randrange(length + 1) # generates random index to mutate
+        rand1 = random.randrange(length)
+        rand2 = random.randrange(length)
         
-        if randIdx < length: # if it generates index length + 1 then make no mutations
-             randVal = random.randrange(1, length) # random value to change to
-             newStr = list(e.get_Encoding())
-             newStr[randIdx] = str(randVal)
-             e.set_Encoding("".join(newStr))
-             
+        print("swap at idx {} & idx {}".format(rand1, rand2))
+        
+        newStr = list(e.get_Encoding())
+        temp = newStr[rand1]
+        newStr[rand1] = newStr[rand2]
+        newStr[rand2] = temp
+        e.set_Encoding("".join(newStr))
+        
         mut_gen.append(e)
+        
     return mut_gen # return the mutated string
     
 def ncr(a, b):
@@ -265,7 +269,7 @@ def nqueens_solver(numQ, numS):
     print("current encodings")
     for e in encodings: 
         print (e.get_Encoding())
-    i =0
+    i = 0
     while (not_found):
         encodings = gen_probabilities(encodings)
         
@@ -278,25 +282,25 @@ def nqueens_solver(numQ, numS):
                 break
              
         next_gen = selection(numQ, encodings)
-        '''
+        
         
         print("fittest parent encodings")
         for e in next_gen: 
             print (e.get_Encoding())
-        '''
+        
            
         crossover_gen = crossover(next_gen, numS)
-        '''
+        
         print("crossover encodings")
         for e in crossover_gen: 
             print (e.get_Encoding())
-        '''
+        
         mut_gen = mutation(crossover_gen) 
-        '''
+        
         print("mutated parent encodings")
         for e in mut_gen: 
             print (e.get_Encoding())
-         '''
+         
         step += 1
         print("Step ", step)
         print()
@@ -304,7 +308,7 @@ def nqueens_solver(numQ, numS):
         i+=1
     
     #encoding_answer = recursive(encodings, step, numQ, numS)
-    display_results(numQ, encoding_answer)
+    #display_results(numQ, encoding_answer)
     '''
     found = False
     while not found:
@@ -389,20 +393,20 @@ def main_fuction(numQ, numS):
         
         #
         next_gen = selection(numQ, population)
-        '''print("Seleted: ")
+        print("Seleted: ")
         for e in next_gen: 
             print (e.get_Encoding())
-        '''#
+        #
         crossover_gen = crossover(next_gen, numS)
-        '''print("Crossover: ")
+        print("Crossover: ")
         for e in crossover_gen: 
             print (e.get_Encoding())
-        '''#
+        #
         mut_gen = mutation(crossover_gen) 
-        '''print("Mutation")
+        print("Mutation")
         for e in mut_gen: 
             print (e.get_Encoding())
-        '''
+        
         step = step + 1
         print()
         population = mut_gen
@@ -410,7 +414,7 @@ def main_fuction(numQ, numS):
     
     #encoding_answer = recursive(encodings, step, numQ, numS)    I don't think we need this here
     display_results(numQ, encoding_answer)
-        
+'''        
 #main_function(4,2)
 #nqueens_solver(4, 2)   
 #----------MAIN----------
