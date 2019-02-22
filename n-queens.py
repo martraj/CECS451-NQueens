@@ -241,6 +241,22 @@ def fitness_func(queenStr):
     totalComb = ncr(len(queenStr), 2)    
     # subtract and return
     return totalComb - local_search(queenStr)
+
+def calculate_stats(steps):
+    steps = [1,2,4,4,5]
+    sorted_steps = sorted(steps)
+    sum_steps = sum(steps)
+    len_steps = len(steps)
+    
+    average = sum_steps/len_steps
+    median = (len_steps/ 2 ) + 0.5
+    minimum = min(steps)
+    maximum = max(steps)
+    
+    print("Average: ", average)
+    print("Median: ", median)
+    print("minimum: ", minimum)
+    print("maximum: ", maximum)
     
 def nqueens_solver(numQ, numS):
     '''
